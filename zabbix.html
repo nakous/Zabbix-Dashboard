@@ -1,0 +1,168 @@
+<html class="no-js" lang="En"> 
+<head>
+<meta charset="utf-8">
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.js"></script>
+	<script src="https://cdn.jsdelivr.net/angular.chartjs/latest/angular-chart.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+ 
+	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script> 
+	
+	
+	<script src="zabbix.js"></script>
+</head>
+<body>
+	<div ng-app="ZabbixMonitor" ng-controller="ZabCtrl">
+	<div class="container  ">
+		<div class="row">
+			<div  class="col-sm-12 col-md-12 p-3 text-center">
+			<form name="myForm">
+				<label for="repeatSelect"> List host: </label>
+				<select name="repeatSelect" id="repeatSelect" ng-change="LoadGraph(selecthost)" ng-model="selecthost">
+				  <option ng-repeat="option in hosts" value="{{option.hostid}}">{{option.host}}</option>
+				</select>  
+		  </form> 
+		  </div>
+	  </div>
+	  <div class="row">
+		<div  class="col-sm-12 col-md-6 ">
+			<h2 class="bg-danger p-2 m-0 text-white">CPU list</h2>
+			  <canvas id="line" class="chart chart-line" chart-data="data"
+				chart-labels="labels" chart-series="series" chart-options="options"
+				chart-dataset-override="datasetOverride" chart-click="onClick">
+				</canvas>
+		</div>
+		<div  class="col-sm-12 col-md-6 ">
+			<h2 class="bg-danger p-2 m-0 text-white">Memory list</h2>
+			  <canvas id="line2" class="chart chart-line" chart-data="Memory.data"
+				chart-labels="Memory.labels" chart-series="Memory.series" chart-options="Memory.options"
+				 >
+			</canvas>
+	    </div>
+	  </div>
+	  
+	  <div class="row">
+		<div  class="col-sm-12 col-md-6 " >
+		<h2 class="bg-danger p-2 m-0 text-white">Disk </h2>
+				<canvas id="pie" class="chart chart-pie"
+					chart-data="disk.data" chart-labels="disk.labels" chart-options="disk.options">
+				</canvas> 
+	   </div>
+	   <div  class="col-sm-12 col-md-6 ">
+	   
+	   <h2 class="bg-danger p-2 m-0 text-white">TRAFFIC </h2>
+	   <canvas id="line3" class="chart chart-line" chart-data="traffic.data"
+				chart-labels="traffic.labels" chart-series="traffic.series" chart-options="traffic.options"
+				 >
+	   </div>
+	  </div>
+	  <div class="row">
+		<div   class="col-sm-12 col-md-6 ">
+		<div     >
+				<h2 class="bg-danger p-2 m-0 text-white" >Load Average </h2>
+		
+									    
+					<div class="row">
+					<div class="col-md-4">
+
+						<h4 style="text-align:center;border-bottom:1px solid maroon;">15 mins</h4>
+						<h3 style="text-align:center; color:red;"><b>{{ average3 }}</b></h3>
+
+
+					</div>
+
+					<div class="col-md-4">
+						<h4 style="text-align:center;border-bottom:1px solid maroon;">5 mins</h4>
+						<h3 style="text-align:center;color:orange"><b>{{ average2 }}</b></h3>
+					</div>
+
+					<div class="col-md-4">
+
+						<h4 style="text-align:center;border-bottom:1px solid maroon;">NOW</h4>
+						<h3 style="text-align:center;color:green;"><b>{{ average1 }}</b></h3>
+
+					</div>
+				</div>
+			</div>
+
+
+		<div      >						  
+			<h2 class=" p-2 m-0 text-center">Ports</h2> 
+			<table class="table datatable-basic table-bordered table-striped table-hover" style="text-align:center;">
+				<thead style="text-align:center;background-color:#BE1E2D; color:white">
+					<tr>						
+						<th>Port</th><th>Status</th>
+					</tr>
+				</thead>
+				<tbody>			 	
+					<tr ng-repeat="(key, value) in service">
+						<td>{{value[2]}}</td>
+						<td>
+							<i ng-show="value[1] == 1" class="icon-checkmark text-green">Open</i>
+							<i ng-show="value[1] == 0" class="icon-checkmark text-green">close</i>
+						</td>
+						</tr>
+					
+				</tbody>
+			</table>
+		</div>	 
+	   </div>
+	   <div  class="col-sm-12 col-md-6 "  >
+			 <h2 class=" p-2 m-0 text-center">Top 10 Process </h2>
+			<table class="table datatable-basic table-bordered table-striped table-hover" style="text-align:center;">
+				<thead style="text-align:center;background-color:#BE1E2D; color:white">
+					<tr>						
+						<th>Process</th><th>Usage</th><th>Load</th> 
+					</tr>
+				</thead>
+				<tbody>			 	
+					<tr ng-repeat="t in top">
+						<td>{{t[0]}}</td>
+						<td>{{t[1]}}</td>
+						<td>{{t[2]}}</td>
+					</tr>					
+				</tbody>
+			</table>
+					
+	   </div>
+	  </div>
+	  <div class="row"  >
+		   <div  class="col-sm-12 col-md-12">
+			 
+			 
+			 
+			 
+			 
+<table class="table datatable-basic table-bordered table-striped table-hover" style="text-align:center;">
+				<thead style="text-align:center;background-color:#BE1E2D; color:white">
+					<tr>						
+						<th>Running Servers</th><th>Status</th><th>Response</th><th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>			 	
+					<tr ng-repeat="(key, value) in service">
+						<td>{{key}}</td>
+						<td>
+					 
+							<i ng-show="value[1] == 1" class="icon-checkmark text-green">Start</i>
+							<i ng-show="value[1] == 0" class="icon-checkmark text-green">Stop</i>
+						</td>
+						<td></td>
+						<td><i class="icon-stop "></i>&nbsp;&nbsp;<i class="icon-play3 text-green"></i></td>
+					</tr>
+					
+				</tbody>
+
+
+
+			</table>
+			 
+			 
+			 
+			.
+	   </div>
+	  </div>
+	</div>
+	</div>
+</body>
