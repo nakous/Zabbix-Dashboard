@@ -3,10 +3,12 @@ app.controller("ZabCtrl", function($scope,$http) {
     
 	 $scope.auth="";
 	 $scope.item=0;
-	 var doman= "http://domain.com" // put your domain name or IP here Ex: http://172.212.247.11
-	var url = doman+"/zabbix/api_jsonrpc.php";
+	var doman= "http://domain.com" // put your domain name or IP here Ex: http://172.212.247.11
+	var user ="Your Name HEAR";
+	var passw = "Your PASS WORD HERE";
 	
-	var parameter ={jsonrpc: "2.0",method: "user.login",params: {user: "Your Name HEAR",password: "Your PASS WORD HERE"},id: 3,auth: null};
+	var url = doman+"/zabbix/api_jsonrpc.php";
+	var parameter ={jsonrpc: "2.0",method: "user.login",params: {user: user,password: passw},id: 3,auth: null};
 	   $http.post(url, parameter,{headers: {'Content-Type': 'application/json'}} ).
 	   then(function(data, status, headers, config) {
 		$scope.auth = data.data.result;
