@@ -7,7 +7,8 @@ this is monotoir expose some graph to manager and check host bug
 To start work with is script you send to ass some information in zabbix.js 
 
 in line 6 you find this var 
-var doman= "http://domain.com" // put your domain name or IP here Ex: http://172.212.247.11
+
+var doman= "Domain Name here" ;
 var user ="Your Name HEAR";
 var passw = "Your PASS WORD HERE";
 
